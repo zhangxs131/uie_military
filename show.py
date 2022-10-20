@@ -1,7 +1,7 @@
 import json
 
 def read_file(filename):
-    with open(filename,'r',encoding='gbk') as f:
+    with open(filename,'r',encoding='utf-8') as f:
         json_list=json.load(f)
 
     return json_list
@@ -17,8 +17,8 @@ def template_class(json_list,choice_id=1):
 
     result=[]
     yx_keyword=['演习']
-    xm_keyword=['项目','DARPA']
-    zb_keyword=['装备','武器']
+    xm_keyword=['DARPA']
+    zb_keyword=['装备','研发']
     if choice_id==1:
         return container_word(json_list,yx_keyword)
     elif choice_id==2:
@@ -39,6 +39,7 @@ def show_list(json_list,attr=None):
                     if k==j:
                         print(k,":",v)   
         print()
+        print('_______________________________________________')
 
 
 def container_word(json_list,key_word=[]):
@@ -52,11 +53,25 @@ def container_word(json_list,key_word=[]):
 
     return result
 
+def gen_txt4biaozhu(json_list,save_name='biaozhu.txt'):
+    
+    content=[]
+    
+    for i in json_list:
+        for k,v in i.items():
+            if k=='content_cn':
+                content.append(v)
+    with open(save_name,'w',encoding='utf-8') as f:
+        f.writelines([i+'\n' for i in content if len(i)>2])
+    
+    
+
 def main():
-    filename='2022-09-26_guowai_dongtai_06775without_tran_8000_content.json'
+    filename='data/2022-09-26_guowai_dongtai_06775without_tran_8000_content.json'
     json_list=read_file(filename)
-    zb_list=template_class(json_list,3)
-    show_list(zb_list,['title_cn'])
+    zb_list=template_class(json_list,1)
+    show_list(zb_list),#['title_cn','content_cn'])
+    #gen_txt4biaozhu(zb_list,'xm_biaozhu.txt')
 
 if __name__=='__main__':
     main()
